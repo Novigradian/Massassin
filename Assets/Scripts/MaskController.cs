@@ -5,6 +5,12 @@ using UnityEngine.InputSystem;
 
 public class MaskController : MonoBehaviour
 {
+    //public GameObject mainCamera;
+    
+    [Header("Targets")]
+    public Transform controlledTarget;
+    [SerializeField] private Transform maskTarget;
+    
     [Header("Movement")]
     [SerializeField] private float moveSpeed;
 
@@ -21,13 +27,22 @@ public class MaskController : MonoBehaviour
     private bool isThrowing;
     private Vector3 throwTarget;
 
+    private CameraFollow cameraFollow;
+    
+    
+
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        cameraFollow = Camera.main.GetComponent<CameraFollow>();
+        PossessTarget(maskTarget);
+        
         input = new PlayerInputActions();
 
         canMove = true;
         isThrowing = false;
+
+        
+        
     }
 
     void OnEnable()
@@ -61,6 +76,11 @@ public class MaskController : MonoBehaviour
             velocity.Normalize();
 
         rb.linearVelocity = velocity * moveSpeed;
+
+        if (canMove && !isThrowing)
+        {
+            FaceMousePosition();
+        }
     }
 
     void TryThrow()
@@ -105,4 +125,61 @@ public class MaskController : MonoBehaviour
         yield return new WaitForSeconds(throwRecoveryTime);
         canMove = true;
     }
+
+    private void PossessTarget(Transform target)
+    {
+        if (target.TryGetComponent<Possessable>(out Possessable possessable))
+        {
+            possessable.isPossessed = true;
+            possessable.maskController = this;
+
+            controlledTarget = target;
+
+            rb = target.GetComponent<Rigidbody>();
+
+            cameraFollow.target = controlledTarget;
+        }
+    }
+
+    void FaceMousePosition()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+        if (!Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
+            return;
+
+        Vector3 lookDir = hit.point - rb.position;
+        lookDir.y = 0f;
+
+        if (lookDir.sqrMagnitude < 0.001f)
+            return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(lookDir, Vector3.up);
+        Quaternion smoothed = Quaternion.Slerp(
+            rb.rotation,
+            targetRotation,
+            20f * Time.fixedDeltaTime
+        );
+
+        rb.MoveRotation(smoothed);
+    }
+
+    public void TryPossessTarget(Collider other)
+    {
+        if (isThrowing)
+        {
+            if ((other.transform.CompareTag("Enemy") || other.transform.CompareTag("Mask")) && other.transform != controlledTarget)
+            {
+                Debug.Log("throwing hit enemy");
+                
+                isThrowing = false;
+                canMove = true;
+                rb.linearVelocity = Vector3.zero;
+                //StartCoroutine(ThrowRecovery());
+
+                PossessTarget(other.transform);
+            }
+        }
+    }
+
 }
