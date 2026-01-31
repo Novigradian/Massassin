@@ -179,6 +179,8 @@ public class MaskController : MonoBehaviour
             rb = target.GetComponent<Rigidbody>();
 
             cameraFollow.target = controlledTarget;
+
+            GameManager.Instance.OnPossessionChanged(controlledTarget);
         }
     }
 
@@ -211,7 +213,7 @@ public class MaskController : MonoBehaviour
         {
             if (Time.time - throwStartTime < throwPossessIgnoreTime) return;
             
-            if ((other.transform.CompareTag("Enemy") || other.transform.CompareTag("Mask")) && other.transform != controlledTarget)
+            if ((other.transform.CompareTag("Enemy") || other.transform.CompareTag("Mask") || other.transform.CompareTag("TargetEnemy")) && other.transform != controlledTarget)
             {
                 Debug.Log("throwing hit enemy");
                 
