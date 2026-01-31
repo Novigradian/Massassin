@@ -44,11 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19dd535c48788f3479e1cbcb4240f247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MaskController
+  controlledTarget: {fileID: 0}
+  maskTarget: {fileID: 0}
   moveSpeed: 17
+  meleeRadius: 2.5
+  possessableLayer:
+    serializedVersion: 2
+    m_Bits: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   throwSpeed: 30
   throwRecoveryTime: 0.5
   arriveDistance: 1
-  ControlTarget: {fileID: 0}
+  throwPossessIgnoreTime: 0.05

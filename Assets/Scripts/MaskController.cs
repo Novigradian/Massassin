@@ -14,6 +14,10 @@ public class MaskController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float moveSpeed;
 
+    [Header("Melee")]
+    [SerializeField] private float meleeRadius = 2.5f;
+    [SerializeField] private LayerMask possessableLayer;
+
     [Header("Throw")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float throwSpeed;
@@ -53,12 +57,14 @@ public class MaskController : MonoBehaviour
         input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         input.Player.Move.canceled += _ => moveInput = Vector2.zero;
         input.Player.Throw.performed += _ => TryThrow();
+        input.Player.Melee.performed += _ => TryMeleePossess();
     }
 
     void OnDisable()
     {
         input.Player.Throw.performed -= _ => TryThrow();
         input.Player.Disable();
+        input.Player.Melee.performed -= _ => TryMeleePossess();
     }
 
     void FixedUpdate()
@@ -216,6 +222,49 @@ public class MaskController : MonoBehaviour
 
                 PossessTarget(other.transform);
             }
+        }
+    }
+
+    void TryMeleePossess()
+    {
+        if (isThrowing) return;
+        if (controlledTarget == null) return;
+
+        Vector3 origin = rb.position;
+
+        Collider[] hits = Physics.OverlapSphere(
+            origin,
+            meleeRadius,
+            possessableLayer
+        );
+
+        Transform closestTarget = null;
+        float closestDistSq = float.MaxValue;
+
+        foreach (Collider hit in hits)
+        {
+            Transform candidate = hit.transform;
+
+            // Skip self
+            if (candidate == controlledTarget)
+                continue;
+
+            // Must be possessable
+            if (!candidate.TryGetComponent<Possessable>(out var possessable))
+                continue;
+
+            float distSq = (candidate.position - origin).sqrMagnitude;
+
+            if (distSq < closestDistSq)
+            {
+                closestDistSq = distSq;
+                closestTarget = candidate;
+            }
+        }
+
+        if (closestTarget != null)
+        {
+            PossessTarget(closestTarget);
         }
     }
 

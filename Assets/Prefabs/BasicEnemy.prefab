@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 8576200633785371323}
   - component: {fileID: 7140079711185503718}
   - component: {fileID: 7277971309577249260}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BasicEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -372,6 +372,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Possessable
   isPossessed: 0
   maskController: {fileID: 0}
+  mask: {fileID: 0}
 --- !u!1001 &8367905779039689230
 PrefabInstance:
   m_ObjectHideFlags: 0
