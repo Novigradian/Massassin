@@ -25,6 +25,12 @@ public class NavMeshPatrol : MonoBehaviour
         }
     }
 
+    void OnDisable()
+    {
+        StopAllCoroutines();
+        isWaiting = false;
+    }
+
     void Update()
     {
         if (isWaiting) return;
@@ -79,5 +85,14 @@ public class NavMeshPatrol : MonoBehaviour
         if (patrolPoints.Length == 0) return;
         currentPointIndex = (currentPointIndex + 1) % patrolPoints.Length;
         agent.SetDestination(patrolPoints[currentPointIndex].position);
+    }
+
+    public void RestartPatrol()
+    {
+        StopAllCoroutines();
+        isWaiting = false;
+
+        if (patrolPoints != null && patrolPoints.Length > 0)
+            agent.SetDestination(patrolPoints[currentPointIndex].position);
     }
 }

@@ -93,7 +93,7 @@ public class MaskController : MonoBehaviour
 
     void TryThrow()
     {
-        if (!canMove || isThrowing) return;
+        if (!canMove || isThrowing || controlledTarget == maskTarget) return;
 
         throwStartTime = Time.time;
 
@@ -143,6 +143,8 @@ public class MaskController : MonoBehaviour
 
     private void PossessTarget(Transform target)
     {
+        
+        //clean up previous target
         if (controlledTarget != null)
         {
             rb.linearVelocity = Vector3.zero;
@@ -166,8 +168,11 @@ public class MaskController : MonoBehaviour
                 target.position = controlledTarget.position;
                 target.rotation = controlledTarget.rotation;
             }
+
+            SetEnemyControlState(controlledTarget, false);
         }
         
+        //handle current target
         if (target.TryGetComponent<Possessable>(out Possessable possessable))
         {
             possessable.isPossessed = true;
@@ -181,7 +186,48 @@ public class MaskController : MonoBehaviour
             cameraFollow.target = controlledTarget;
 
             GameManager.Instance.OnPossessionChanged(controlledTarget);
+
+            SetEnemyControlState(target, true);
         }
+    }
+
+    private void SetEnemyControlState(Transform enemy, bool isPlayerControlled)
+    {
+        if (!enemy) return;
+
+        if (enemy.TryGetComponent<UnityEngine.AI.NavMeshAgent>(out var agent))
+        {
+            if (isPlayerControlled)
+            {
+                // AI → Player
+                if (agent.enabled)
+                {
+                    agent.ResetPath();   // ✅ clear stale path
+                    agent.enabled = false;
+                }
+            }
+            else
+            {
+                // Player → AI
+                agent.enabled = true;
+                agent.isStopped = false;
+            }
+        }
+
+        if (enemy.TryGetComponent<Rigidbody>(out var enemyRb))
+        {
+            enemyRb.isKinematic = !isPlayerControlled;
+        }
+
+        if (enemy.TryGetComponent<NavMeshPatrol>(out var patrol))
+        {
+            patrol.enabled = !isPlayerControlled;
+            //if (!isPlayerControlled) patrol.RestartPatrol();
+        }
+            
+
+        if (enemy.TryGetComponent<EnemyVision>(out var vision))
+            vision.enabled = !isPlayerControlled;
     }
 
     void FaceMousePosition()

@@ -15,10 +15,25 @@ public class EnemyVision : MonoBehaviour
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
 
+    private Coroutine visionRoutine;
+
     void Start()
     {
         
-        StartCoroutine(FindTargetsWithDelay(0.1f));
+        //StartCoroutine(FindTargetsWithDelay(0.1f));
+    }
+
+    void OnEnable()
+    {
+        visionRoutine = StartCoroutine(FindTargetsWithDelay(0.1f));
+    }
+
+    void OnDisable()
+    {
+        if (visionRoutine != null)
+            StopCoroutine(visionRoutine);
+
+        visibleTargets.Clear();
     }
 
     System.Collections.IEnumerator FindTargetsWithDelay(float delay)
