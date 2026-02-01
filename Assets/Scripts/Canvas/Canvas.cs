@@ -92,7 +92,12 @@ public class Canvas : MonoBehaviour
         if(creditsPanel) creditsPanel.SetActive(false);
     }
 
-    public void LoadLevelByName(string levelName)
+    public void ReloadCurrentLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoadGameLevelByName(string levelName)
     {
         // Optional: Switch music if you haven't already
         if (AudioManager.Instance != null) {
@@ -101,4 +106,25 @@ public class Canvas : MonoBehaviour
 
         SceneManager.LoadScene(levelName);
     }
+
+    public void LoadUILevelByName(string levelName)
+    {
+        // Optional: Switch music if you haven't already
+        if (AudioManager.Instance != null) {
+            AudioManager.Instance.SwitchToMenuTheme();
+        }
+
+        SceneManager.LoadScene(levelName);
+        ShowMainMenu();
+    }
+
+    public void EnterGameMode()
+    {
+        if(mainButtonsPanel) mainButtonsPanel.SetActive(false);
+        if(levelSelectionPanel) levelSelectionPanel.SetActive(false);
+        if(settingsPanel) settingsPanel.SetActive(false);
+        if(creditsPanel) creditsPanel.SetActive(false);
+    }
+
+
 }
