@@ -153,7 +153,8 @@ public class MaskController : MonoBehaviour
 
         MinionMask minion = Instantiate(
             minionPrefab,
-            controlledTarget.position + controlledTarget.forward * minionThrowGap,
+            new Vector3 (controlledTarget.position.x, 1.68f, controlledTarget.position.z)
+            + controlledTarget.forward * minionThrowGap,
             Quaternion.LookRotation(direction)
         );
 
@@ -265,7 +266,7 @@ public class MaskController : MonoBehaviour
             if (target == maskTarget) //switch from controlled enemy back to mask
             {
                 maskTarget.gameObject.SetActive(true);
-                target.position = controlledTarget.position;
+                target.position = controlledTarget.position + Vector3.up * 1f;
                 target.rotation = controlledTarget.rotation;
             }
 

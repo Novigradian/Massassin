@@ -38,6 +38,19 @@ public class GameManager : MonoBehaviour
 
         // Delay optional (for animation / VFX)
         //Invoke(nameof(LoadNextLevel), 1.5f);
+
+        Canvas.Instance.ShowWinPanel();
+    }
+
+    public void NextLevelBtn()
+    {
+        Invoke(nameof(LoadNextLevel), 1.5f);
+        Debug.Log("Next Level Button Pressed");
+    }
+
+    public void RestartLevelBtn()
+    {
+        Invoke(nameof(ReloadLevel), 0.1f);
     }
 
     void LoadNextLevel()
@@ -64,6 +77,8 @@ public class GameManager : MonoBehaviour
         levelEnded = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

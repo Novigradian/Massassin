@@ -157,7 +157,15 @@ public class Canvas : MonoBehaviour
 
     public void ReloadCurrentLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.Instance.RestartLevelBtn();
+        Debug.Log("Restart Level Button Pressed from Canvas");
+    }
+
+    public void LoadNextLevel()
+    {
+        Debug.Log("Next Level Button Pressed from Canvas");
+        GameManager.Instance.NextLevelBtn();
+        
     }
 
     public void LoadGameLevelByName(string levelName)

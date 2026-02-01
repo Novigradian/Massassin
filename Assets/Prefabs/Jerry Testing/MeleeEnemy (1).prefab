@@ -373,8 +373,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 5, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 2.4143279, z: 1}
+  m_Center: {x: 0, y: 1.2928361, z: 0}
 --- !u!195 &997522824754737707
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -414,8 +414,10 @@ MonoBehaviour:
   timeBetweenAttacks: 0.3
   projectilePrefab: {fileID: 0}
   firePoint: {fileID: 0}
-  patrolPoints: []
-  patrolSpeed: 10
+  patrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  patrolSpeed: 4
   waitTime: 0.4
   turnSpeed: 300
   lookAngle: 60

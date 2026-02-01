@@ -188,6 +188,8 @@ public class NavMeshPatrol : MonoBehaviour
     {
         if (vision.visibleTargets.Count > 0)
         {
+            if (vision.visibleTargets[0] == null) return;
+            
             agent.SetDestination(vision.visibleTargets[0].position);
         }
     }

@@ -241,8 +241,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1.8949461, z: 1}
+  m_Center: {x: 0, y: 1.9032829, z: 0}
 --- !u!54 &8919955294390789998
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -283,6 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Possessable
   isPossessed: 0
+  isMinioned: 0
   maskController: {fileID: 0}
   mask: {fileID: 723021928660440169}
 --- !u!95 &8472920215826518522
