@@ -47,4 +47,15 @@ public class MinionAI : MonoBehaviour
         owner.Land();
         Destroy(gameObject);
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("TargetEnemy"))
+        {
+            // Implement logic for when the minion reaches the target enemy
+            Debug.Log("Minion has reached the target enemy!");
+            // For example, deal damage or trigger an event
+            GameManager.Instance.HandleWin();
+        }
+    }
 }

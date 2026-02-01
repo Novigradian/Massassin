@@ -8,6 +8,7 @@ using TMPro;
 public class Canvas : MonoBehaviour
 {
     public static Canvas Instance;
+    public GameObject backgroundImage;
 
     [Header("UI Panels")]
     [Tooltip("The container holding Play, Settings, Credits, Exit")]
@@ -122,6 +123,7 @@ public class Canvas : MonoBehaviour
     private void ShowMainMenu()
     {
         // Helper to reset UI state on start
+        backgroundImage.SetActive(true);
         if(mainButtonsPanel) mainButtonsPanel.SetActive(true);
         if(levelSelectionPanel) levelSelectionPanel.SetActive(false);
         if(settingsPanel) settingsPanel.SetActive(false);
@@ -157,7 +159,15 @@ public class Canvas : MonoBehaviour
 
     public void ReloadCurrentLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.Instance.RestartLevelBtn();
+        Debug.Log("Restart Level Button Pressed from Canvas");
+    }
+
+    public void LoadNextLevel()
+    {
+        Debug.Log("Next Level Button Pressed from Canvas");
+        GameManager.Instance.NextLevelBtn();
+        
     }
 
     public void LoadGameLevelByName(string levelName)
@@ -183,6 +193,7 @@ public class Canvas : MonoBehaviour
 
     public void EnterGameMode()
     {
+        backgroundImage.SetActive(false);
         if(mainButtonsPanel) mainButtonsPanel.SetActive(false);
         if(levelSelectionPanel) levelSelectionPanel.SetActive(false);
         if(settingsPanel) settingsPanel.SetActive(false);
