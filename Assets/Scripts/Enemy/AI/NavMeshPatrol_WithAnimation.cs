@@ -1,16 +1,13 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(EnemyVision))]
+[RequireComponent(typeof(Animator))]
 public class NavMeshPatrol_WithAnimation : MonoBehaviour
 {
-    static readonly int _moving = Animator.StringToHash("Moving");
-    static readonly int _leftTurn = Animator.StringToHash("LeftTurn");
-    static readonly int _rightTurn = Animator.StringToHash("RightTurn");
-    static readonly int _attack = Animator.StringToHash("Attack");
-
     // --- New Enum for Combat Style ---
     public enum CombatType { Melee, Ranged }
 
@@ -18,18 +15,24 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     [SerializeField] private CombatType combatType;
     [SerializeField] private float attackRange = 2f; // Distance to stop and attack
     [SerializeField] private float timeBetweenAttacks = 1.5f;
+    [SerializeField] private float projectileSpawnDelay = 0.2f; // 攻击动画后子弹发射延迟
     [SerializeField] private GameObject projectilePrefab; // Only for Ranged
     [SerializeField] private Transform firePoint; // Where projectiles spawn
 
     [Header("References")]
     [SerializeField] private Transform[] patrolPoints;
-    [SerializeField] private Animator animator;
     private EnemyVision vision;
     private NavMeshAgent agent;
+    [SerializeField] private Animator animator;
+
+    [Header("Animation Settings")]
+    [SerializeField] private bool useRootMotion = true;
+    [SerializeField] private string speedParameterName = "Speed"; // Animator参数名称
+    [SerializeField] private float animationSpeedMultiplier = 1f; // 动画速度倍增器
 
     [Header("Patrol Settings")]
     [SerializeField] private float patrolSpeed = 3.5f;
-    [SerializeField] private float waitTime = 1f; // when looking around
+    [SerializeField] private float waitTime = 1f;
     [SerializeField] private float turnSpeed = 90f;
     [SerializeField] private float lookAngle = 60f;
 
@@ -41,29 +44,52 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     private State currentState;
 
     // --- Internal Tracking ---
-    private int currentPointIndex;
-    private bool isWaiting;
+    private int currentPointIndex = 0;
+    private bool isWaiting = false;
     private Coroutine activeLookCoroutine;
     private Vector3 lastKnownPosition;
-    private float attackTimer; // Counts down to next attack
+    private float attackTimer = 0f; // Counts down to next attack
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         vision = GetComponent<EnemyVision>();
+        animator = GetComponent<Animator>();
 
-        if (animator == null)
-            animator = GetComponent<Animator>();
+        // 配置NavMeshAgent使用Root Motion
+        if (useRootMotion)
+        {
+            agent.updatePosition = false; // 禁用NavMeshAgent的位置更新
+            agent.updateRotation = true;  // 保留旋转控制
+        }
 
         currentState = State.Patrolling;
         agent.speed = patrolSpeed;
-        agent.isStopped = false;
 
         if (patrolPoints != null && patrolPoints.Length > 0)
         {
-            currentPointIndex = 0;
             agent.SetDestination(patrolPoints[0].position);
-            if (animator != null) animator.SetBool(_moving, true);
+        }
+    }
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
+        isWaiting = false;
+    }
+
+    void OnAnimatorMove()
+    {
+        // 使用Root Motion时，将Animator的移动应用到NavMeshAgent
+        if (useRootMotion && animator != null && agent != null)
+        {
+            // 应用Root Motion的位置变化
+            Vector3 newPosition = animator.rootPosition;
+            newPosition.y = agent.nextPosition.y; // 保持NavMesh的Y轴高度
+            transform.position = newPosition;
+            
+            // 同步NavMeshAgent，让它知道当前位置
+            agent.nextPosition = newPosition;
         }
     }
 
@@ -71,14 +97,15 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     {
         if (attackTimer > 0) attackTimer -= Time.deltaTime;
 
-        CheckVision();
-
-        // Keep movement animation in sync with movement unless attacking or waiting
-        if (animator != null)
+        // 更新Animator的速度参数
+        if (useRootMotion && animator != null && agent != null)
         {
-            bool isMovingNow = !isWaiting && !agent.isStopped && agent.velocity.sqrMagnitude > 0.01f && currentState != State.Attacking;
-            animator.SetBool(_moving, isMovingNow);
+            // 使用desiredVelocity而不是velocity，这样即使位置由动画控制，速度参数也是正确的
+            float currentSpeed = agent.desiredVelocity.magnitude;
+            animator.SetFloat(speedParameterName, currentSpeed * animationSpeedMultiplier);
         }
+
+        CheckVision();
 
         switch (currentState)
         {
@@ -101,9 +128,12 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     void CheckVision()
     {
         // 1. If we see the player...
-        if (vision != null && vision.visibleTargets.Count > 0)
+        if (vision.visibleTargets.Count > 0)
         {
             Transform target = vision.visibleTargets[0];
+
+            if (target == null) return;
+
             lastKnownPosition = target.position;
 
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
@@ -135,7 +165,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
             }
         }
         // 2. If we LOST the player...
-        else
+        else 
         {
             if (currentState == State.Chasing || currentState == State.Attacking)
             {
@@ -153,7 +183,6 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         agent.isStopped = false; // Make sure we can move
         agent.speed = chaseSpeed;
         StopLooking();
-        if (animator != null) animator.SetBool(_moving, true);
     }
 
     void StartAttacking()
@@ -163,7 +192,6 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         currentState = State.Attacking;
         agent.isStopped = true; // Stop moving to shoot/hit
         StopLooking();
-        if (animator != null) animator.SetBool(_moving, false);
     }
 
     void StartSearching()
@@ -174,7 +202,6 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         agent.isStopped = false;
         agent.speed = chaseSpeed;
         agent.SetDestination(lastKnownPosition);
-        if (animator != null) animator.SetBool(_moving, true);
     }
 
     void ReturnToPatrol()
@@ -186,7 +213,6 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         {
             agent.SetDestination(patrolPoints[currentPointIndex].position);
         }
-        if (animator != null) animator.SetBool(_moving, true);
     }
 
     void StopLooking()
@@ -199,7 +225,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
 
     void ChaseUpdate()
     {
-        if (vision != null && vision.visibleTargets.Count > 0)
+        if (vision.visibleTargets.Count > 0)
         {
             agent.SetDestination(vision.visibleTargets[0].position);
         }
@@ -207,15 +233,18 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
 
     void AttackUpdate()
     {
-        if (vision != null && vision.visibleTargets.Count > 0)
+        if (vision.visibleTargets.Count > 0)
         {
             Transform target = vision.visibleTargets[0];
+
+            if (target == null) return;
 
             // 1. Calculate direction to target
             Vector3 dirToTarget = (target.position - transform.position).normalized;
             dirToTarget.y = 0; // Keep it flat so they don't look up/down
 
-            // 2. Rotate to face the target (faster rotation to aim)
+            // 2. Rotate to face the target
+            // Increased speed (10f) so they aim faster
             Quaternion lookRot = Quaternion.LookRotation(dirToTarget);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 10f);
 
@@ -227,7 +256,9 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
                 return;
             }
 
-            // 4. Check Angle before shooting
+            // 4. NEW: Check Angle before shooting
+            // We calculate the angle between where we are looking (transform.forward)
+            // and where the player is (dirToTarget).
             float angleToTarget = Vector3.Angle(transform.forward, dirToTarget);
 
             // Only shoot if we are facing the player (within 10 degrees)
@@ -235,32 +266,67 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
             {
                 if (attackTimer <= 0)
                 {
-                    PerformAttack();
+                    PerformAttack(target);
                     attackTimer = timeBetweenAttacks;
                 }
             }
         }
     }
 
-    void PerformAttack()
+    void PerformAttack(Transform target)
     {
+        // Trigger attack animation
         if (animator != null)
         {
-            animator.SetTrigger(_attack);
+            animator.SetTrigger("Attack");
         }
 
         if (combatType == CombatType.Melee)
         {
-            Debug.Log("Melee Attack! (Add damage handling on animation event)");
-            // Example: apply damage in animation event callback
+            Debug.Log("Melee Attack! (Add animation trigger here)");
+            
+            if (target.gameObject.CompareTag("Mask"))
+            {
+                Debug.Log("You Lose!");
+                // other.GetComponent<PlayerHealth>().TakeDamage(10);
+
+                GameManager.Instance.HandleLose();
+            }
+
+            if (target.gameObject.CompareTag("Enemy"))
+            {
+                Possessable p = target.gameObject.GetComponent<Possessable>();
+                if (p == null) return;
+
+                if (p.isPossessed)
+                {
+                    Debug.Log("Hit Possessed Enemy.");  
+                    p.PossessedDie();
+                }
+
+                if (p.isMinioned)
+                {
+                    p.gameObject.GetComponent<MinionAI>().Die();
+                }
+            }
+
+            
         }
         else // Ranged
         {
             Debug.Log("Pew Pew! (Shooting)");
-            if (projectilePrefab != null && firePoint != null)
-            {
-                Instantiate(projectilePrefab, firePoint.position, transform.rotation);
-            }
+            // Delay projectile spawning
+            StartCoroutine(FireProjectileWithDelay(projectileSpawnDelay));
+        }
+    }
+
+    IEnumerator FireProjectileWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        if (projectilePrefab != null && firePoint != null)
+        {
+            Instantiate(projectilePrefab, firePoint.position, transform.rotation);
         }
     }
 
@@ -279,7 +345,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     void PatrolUpdate()
     {
         if (isWaiting) return;
-        if (patrolPoints == null || patrolPoints.Length == 0) return;
+        if (patrolPoints.Length == 0) return;
 
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
@@ -290,27 +356,15 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     IEnumerator LookAroundRoutine(bool isSearching)
     {
         isWaiting = true;
-        if (animator != null) animator.SetBool(_moving, false);
-
         Quaternion originalRotation = transform.rotation;
-
         Quaternion lookLeft = originalRotation * Quaternion.Euler(0, -lookAngle, 0);
         Quaternion lookRight = originalRotation * Quaternion.Euler(0, lookAngle, 0);
 
-        // Trigger left turn animation and rotate toward that direction
-        if (animator != null) animator.SetTrigger(_leftTurn);
         yield return StartCoroutine(RotateToTarget(lookLeft));
-        yield return new WaitForSeconds(GetCurrentAnimLength() + waitTime);
-
-        // Trigger right turn animation and rotate toward that direction
-        if (animator != null) animator.SetTrigger(_rightTurn);
+        yield return new WaitForSeconds(waitTime);
         yield return StartCoroutine(RotateToTarget(lookRight));
-        yield return new WaitForSeconds(GetCurrentAnimLength() + waitTime);
-
-        // Trigger left turn to return to center (re-using left trigger as in original)
-        if (animator != null) animator.SetTrigger(_leftTurn);
+        yield return new WaitForSeconds(waitTime);
         yield return StartCoroutine(RotateToTarget(originalRotation));
-        yield return new WaitForSeconds(GetCurrentAnimLength() + waitTime);
 
         isWaiting = false;
 
@@ -318,36 +372,27 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         else GoToNextPoint();
     }
 
-    // Helper to safely get current animation state's length
-    float GetCurrentAnimLength()
-    {
-        if (animator == null) return 0f;
-        var state = animator.GetCurrentAnimatorStateInfo(0);
-        return state.length;
-    }
-
-    // A helper function to smoothly rotate the enemy
     IEnumerator RotateToTarget(Quaternion targetRotation)
     {
         while (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
         {
-            // RotateTowards ensures we move at a constant speed
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation,
-                targetRotation,
-                turnSpeed * Time.deltaTime
-            );
-
-            // Wait for the next frame
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
             yield return null;
         }
     }
 
     void GoToNextPoint()
     {
-        if (patrolPoints == null || patrolPoints.Length == 0) return;
         currentPointIndex = (currentPointIndex + 1) % patrolPoints.Length;
         agent.SetDestination(patrolPoints[currentPointIndex].position);
-        if (animator != null) animator.SetBool(_moving, true);
+    }
+
+    public void RestartPatrol()
+    {
+        StopAllCoroutines();
+        isWaiting = false;
+
+        if (patrolPoints != null && patrolPoints.Length > 0)
+            agent.SetDestination(patrolPoints[currentPointIndex].position);
     }
 }

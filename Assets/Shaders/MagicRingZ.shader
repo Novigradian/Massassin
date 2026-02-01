@@ -10,7 +10,6 @@ Shader "Custom/MagicRingZ"
         _ForwardAxis ("Forward Axis (0=X,1=Y,2=Z)", Range(0,2)) = 0
         _AngleOffset ("Angle Offset (deg)", Range(0,360)) = 0
         _SoftParticleFade ("Soft Particle Fade Distance", Range(0.01, 10)) = 1.0
-    }
     SubShader
     {
         // No culling or depth
@@ -29,19 +28,17 @@ Shader "Custom/MagicRingZ"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             #include "CommonShaderMethods.hlsl"
-
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             float _Power;
             float3 _Scale;
             float4 _Speed, _MainColor;
             float _UpAxis;
             float _ForwardAxis;
             float _AngleOffset;
-            float _SoftParticleFade;
 
             struct appdata
-            {
+            float _SoftParticleFade;
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
@@ -50,24 +47,21 @@ Shader "Custom/MagicRingZ"
             {
                 float3 posOS : TEXCOORD0; // object-space position
                 float4 vertex : SV_POSITION;
-                float4 screenPos : TEXCOORD1; // screen position for depth comparison
             };
 
             v2f vert(appdata v)
-            {
+                float4 screenPos : TEXCOORD1; // screen position for depth comparison
                 v2f o;
                 // Keep built-in transform for clip position
                 o.vertex = TransformObjectToHClip(v.vertex);
                 // Pass full object-space position to fragment shader
                 o.posOS = v.vertex.xyz;
-                // Compute screen position for depth comparison
-                o.screenPos = ComputeScreenPos(o.vertex);
                 return o;
             }
 
             sampler2D _MainTex;
-
-            // Simple FBM-like summation to reduce symmetry artifacts
+                // Compute screen position for depth comparison
+                o.screenPos = ComputeScreenPos(o.vertex);
             float NoiseFBM(float2 p)
             {
                 return GradientNoise(p * 1.0, 1);
@@ -84,6 +78,12 @@ Shader "Custom/MagicRingZ"
 
             float4 frag(v2f i) : SV_Target
             {
+                // Use object-space position but allow user to pick which axis is 'up'
+                float3 pos = i.posOS;
+
+                // Determine integer axis indices (0,1,2) from properties
+                float upIdxF = round(_UpAxis);
+                float forwardIdxF = round(_ForwardAxis);
                 // Soft Particle Depth Fade
                 float2 screenUV = i.screenPos.xy / i.screenPos.w;
                 float sceneDepth = LinearEyeDepth(SampleSceneDepth(screenUV), _ZBufferParams);
@@ -91,19 +91,6 @@ Shader "Custom/MagicRingZ"
                 float depthDiff = sceneDepth - particleDepth;
                 float depthFade = saturate(depthDiff / _SoftParticleFade);
                 
-                // Use object-space position but allow user to pick which axis is 'up'
-                float3 pos = i.posOS;
-
-                // Determine integer axis indices (0,1,2) from properties
-                float upIdxF = round(_UpAxis);
-                float forwardIdxF = round(_ForwardAxis);
-
-                // If user accidentally picked same axis for forward and up, pick a different forward (fallback)
-                if (abs(forwardIdxF - upIdxF) < 0.01)
-                {
-                    forwardIdxF = fmod(forwardIdxF + 1.0, 3.0);
-                }
-
                 // Compute the remaining radial axis index (0+1+2 = 3)
                 float otherIdxF = 3.0 - upIdxF - forwardIdxF;
 
@@ -139,9 +126,9 @@ Shader "Custom/MagicRingZ"
 
                 float v = noise * pow(h, _Power) * radialFalloff;
 
-                // Color + alpha with depth fade applied
+                // Color + alpha
                 float4 col = _MainColor * saturate(v);
-                col.a = saturate(v) * depthFade; // Apply depth fade to alpha
+                col.a = saturate(v);
                 return col;
             }
             ENDHLSL
