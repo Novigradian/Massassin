@@ -244,7 +244,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.292659, z: 1}
+  m_Size: {x: 1.1, y: 2.292659, z: 1.1}
   m_Center: {x: 0, y: 0.6463295, z: 0}
 --- !u!195 &4611183486252231933
 NavMeshAgent:
@@ -280,14 +280,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e1d91b6a4164d50bc1a358197babbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NavMeshPatrol
+  combatType: 0
+  attackRange: 2
+  timeBetweenAttacks: 1.5
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 0}
   patrolPoints:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  patrolSpeed: 3.5
   waitTime: 0.4
   turnSpeed: 135
   lookAngle: 60
+  chaseSpeed: 6
 --- !u!95 &5745541151243423730
 Animator:
   serializedVersion: 7
@@ -372,7 +379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Possessable
   isPossessed: 0
   maskController: {fileID: 0}
-  mask: {fileID: 0}
+  mask: {fileID: 8710432448377546591}
 --- !u!1001 &8367905779039689230
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -456,5 +463,10 @@ PrefabInstance:
 --- !u!4 &8334610975087148517 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8ae4061ebc8ea2d4aaef9823f89ad546, type: 3}
+  m_PrefabInstance: {fileID: 8367905779039689230}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8710432448377546591 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ae4061ebc8ea2d4aaef9823f89ad546, type: 3}
   m_PrefabInstance: {fileID: 8367905779039689230}
   m_PrefabAsset: {fileID: 0}

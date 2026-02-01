@@ -110,6 +110,8 @@ public class MaskController : MonoBehaviour
         {
             FaceMousePosition();
         }
+
+        rb.angularVelocity = Vector3.zero;
     }
 
     void TryThrowMinion()
@@ -405,6 +407,14 @@ public class MaskController : MonoBehaviour
         {
             PossessTarget(closestTarget);
         }
+    }
+
+    public void PossessedDie()
+    {
+        //possessed target dies, switch back to mask
+        GameObject deadPossessed = controlledTarget.gameObject;
+        PossessTarget(maskTarget);
+        Destroy(deadPossessed);
     }
 
 }

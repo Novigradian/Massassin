@@ -3,6 +3,7 @@ using UnityEngine;
 public class Possessable : MonoBehaviour
 {
     public bool isPossessed = false;
+    public bool isMinioned = false;
 
     public MaskController maskController;
 
@@ -39,5 +40,10 @@ public class Possessable : MonoBehaviour
         if (mask == null) return;
 
         mask.SetActive(state);
+    }
+
+    public void PossessedDie()
+    {
+        maskController.PossessedDie();
     }
 }

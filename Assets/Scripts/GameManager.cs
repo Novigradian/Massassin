@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
     }
     void HandleWin()
     {
+        if (levelEnded) return;
+        
         levelEnded = true;
         Debug.Log("YOU WIN");
 
@@ -53,7 +55,14 @@ public class GameManager : MonoBehaviour
         levelEnded = true;
         Debug.Log("YOU LOSE");
 
-        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Invoke(nameof(ReloadLevel), 1.5f);
+        Canvas.Instance.ShowLosePanel();
+    }
+
+    void ReloadLevel()
+    {
+        levelEnded = false;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created

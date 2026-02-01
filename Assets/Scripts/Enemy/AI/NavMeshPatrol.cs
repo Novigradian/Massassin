@@ -91,6 +91,9 @@ public class NavMeshPatrol : MonoBehaviour
         if (vision.visibleTargets.Count > 0)
         {
             Transform target = vision.visibleTargets[0];
+
+            if (target == null) return;
+
             lastKnownPosition = target.position;
 
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
@@ -193,6 +196,8 @@ public class NavMeshPatrol : MonoBehaviour
         if (vision.visibleTargets.Count > 0)
         {
             Transform target = vision.visibleTargets[0];
+
+            if (target == null) return;
 
             // 1. Calculate direction to target
             Vector3 dirToTarget = (target.position - transform.position).normalized;

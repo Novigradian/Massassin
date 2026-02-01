@@ -21,6 +21,14 @@ public class Canvas : MonoBehaviour
     [Tooltip("The panel that appears when Credits is clicked")]
     public GameObject creditsPanel;
 
+    [Tooltip("The panel that appears when player loses")]
+    public GameObject losePanel;
+
+    [Tooltip("The panel that appears when player wins")]
+    public GameObject winPanel;
+
+    public bool isTesting = false;
+
     private void Awake()
     {
         // --- SINGLETON LOGIC ---
@@ -37,7 +45,7 @@ public class Canvas : MonoBehaviour
     private void Start()
     {
         // Ensure we start in the correct state (Main Menu Open, others Closed)
-        ShowMainMenu();
+        if (!isTesting) ShowMainMenu();  
     }
 
     // --- BUTTON FUNCTIONS ---
@@ -92,7 +100,22 @@ public class Canvas : MonoBehaviour
         if(creditsPanel) creditsPanel.SetActive(false);
     }
 
-    public void LoadLevelByName(string levelName)
+    public void ShowLosePanel()
+    {
+        losePanel.SetActive(true);
+    }
+
+    public void ShowWinPanel()
+    {
+        winPanel.SetActive(true);
+    }
+
+    public void ReloadCurrentLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoadGameLevelByName(string levelName)
     {
         // Optional: Switch music if you haven't already
         if (AudioManager.Instance != null) {
@@ -101,4 +124,25 @@ public class Canvas : MonoBehaviour
 
         SceneManager.LoadScene(levelName);
     }
+
+    public void LoadUILevelByName(string levelName)
+    {
+        // Optional: Switch music if you haven't already
+        if (AudioManager.Instance != null) {
+            AudioManager.Instance.SwitchToMenuTheme();
+        }
+
+        SceneManager.LoadScene(levelName);
+        ShowMainMenu();
+    }
+
+    public void EnterGameMode()
+    {
+        if(mainButtonsPanel) mainButtonsPanel.SetActive(false);
+        if(levelSelectionPanel) levelSelectionPanel.SetActive(false);
+        if(settingsPanel) settingsPanel.SetActive(false);
+        if(creditsPanel) creditsPanel.SetActive(false);
+    }
+
+
 }

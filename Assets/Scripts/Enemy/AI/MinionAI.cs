@@ -20,11 +20,17 @@ public class MinionAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         this.owner = owner;
 
+        GetComponent<NavMeshPatrol>().enabled = false;
+        GetComponent<EnemyVision>().enabled = false;
+        GetComponent<Possessable>().isMinioned = true;
+        agent.ResetPath();
+
         mask.SetActive(true);
 
         GameObject target = GameObject.FindGameObjectWithTag("TargetEnemy");
         if (target != null)
             targetEnemy = target.transform;
+            
     }
 
     void Update()
@@ -37,6 +43,8 @@ public class MinionAI : MonoBehaviour
     public void Die()
     {
         owner.transform.position = transform.position;
+        owner.gameObject.SetActive(true);
+        owner.Land();
         Destroy(gameObject);
     }
 }

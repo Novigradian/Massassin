@@ -79,7 +79,7 @@ public class MinionMask : MonoBehaviour
         transform.position = targetPosition; // authoritative snap
     }*/
 
-    void Land()
+    public void Land()
     {
         isFlying = false;
         isLanded = true;
@@ -163,7 +163,7 @@ public class MinionMask : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy") && other.TryGetComponent<Possessable>(out var possessable))
         {
             PossessEnemy(other.transform);
-            //Debug.Log("Possessable hit while flying, but possession is disabled.");
+            Debug.Log("Possessable hit while flying, but possession is disabled.");
         }
 
         
