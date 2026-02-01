@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f726543-9220-4555-bc7b-fc85075355f4" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Shaders/CommonShaderMethods.hlsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRing.shader" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRing.shader.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Materials/CustomSkybox.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Materials/CustomSkybox.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/copilotDiffState.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/BlenderFiles/Enemy.blend" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/BlenderFiles/Enemy.blend" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Enemy.fbx" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Enemy.fbx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Materials/New Material 1.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Materials/New Material 1.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +107,7 @@
       <option name="presentableId" value="Default" />
       <updated>1769904358786</updated>
       <workItem from="1769904359559" duration="710000" />
-      <workItem from="1769906107201" duration="6406000" />
+      <workItem from="1769906107201" duration="7172000" />
     </task>
     <servers />
   </component>
