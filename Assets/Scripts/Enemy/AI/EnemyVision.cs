@@ -56,6 +56,9 @@ public class EnemyVision : MonoBehaviour
             Transform target = targetsInViewRadius[i].transform;
             Vector3 dirToTarget = (target.position - transform.position).normalized;
 
+            if (target.GetComponent<Possessable>().isPossessed != true)
+                continue;
+
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
                 float dstToTarget = Vector3.Distance(transform.position, target.position);

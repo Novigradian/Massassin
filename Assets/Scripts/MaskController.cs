@@ -110,6 +110,8 @@ public class MaskController : MonoBehaviour
         {
             FaceMousePosition();
         }
+
+        rb.angularVelocity = Vector3.zero;
     }
 
     void TryThrowMinion()
