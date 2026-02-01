@@ -49,7 +49,6 @@ public class EnemyVision : MonoBehaviour
                 {
                     visibleTargets.Add(target);
                     Debug.Log("Player Detected!");
-                    // Call your Chase script here
 
                 }
             }
