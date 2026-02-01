@@ -106,7 +106,7 @@ public class MinionMask : MonoBehaviour
         //agent.enabled = true;
         //agent.isStopped = false;
 
-        MinionAI ai = enemy.gameObject.AddComponent<MinionAI>();
+        MinionAI ai = enemy.gameObject.GetComponent<MinionAI>();
         ai.Initialize(this);
 
         // mask visually attaches or disappears
@@ -162,8 +162,8 @@ public class MinionMask : MonoBehaviour
 
         if (other.gameObject.CompareTag("Enemy") && other.TryGetComponent<Possessable>(out var possessable))
         {
-            //PossessEnemy(other.transform);
-            Debug.Log("Possessable hit while flying, but possession is disabled.");
+            PossessEnemy(other.transform);
+            //Debug.Log("Possessable hit while flying, but possession is disabled.");
         }
 
         
