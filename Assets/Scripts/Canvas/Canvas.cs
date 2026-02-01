@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor; // Allows us to stop the game in the editor
 #endif
@@ -89,5 +90,15 @@ public class Canvas : MonoBehaviour
         if(levelSelectionPanel) levelSelectionPanel.SetActive(false);
         if(settingsPanel) settingsPanel.SetActive(false);
         if(creditsPanel) creditsPanel.SetActive(false);
+    }
+
+    public void LoadLevelByName(string levelName)
+    {
+        // Optional: Switch music if you haven't already
+        if (AudioManager.Instance != null) {
+            AudioManager.Instance.SwitchToGameTheme();
+        }
+
+        SceneManager.LoadScene(levelName);
     }
 }
