@@ -188,8 +188,12 @@ public class MaskController : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
+        //Debug.Log("f22n");
+
         if (!Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
             return;
+
+        //Debug.Log("facing mouse position");
 
         Vector3 lookDir = hit.point - rb.position;
         lookDir.y = 0f;
