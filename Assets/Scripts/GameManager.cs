@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
         levelEnded = true;
         Debug.Log("YOU LOSE");
 
-        //Invoke(nameof(ReloadLevel), 1.5f);
+        Invoke(nameof(ReloadLevel), 1.5f);
         Canvas.Instance.ShowLosePanel();
     }
 
