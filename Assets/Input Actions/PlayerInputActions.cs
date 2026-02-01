@@ -118,6 +118,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Recall"",
+                    ""type"": ""Button"",
+                    ""id"": ""68926613-83f8-4665-a84a-7cd788ad0f8a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -255,12 +264,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2b4ae9ef-1647-4688-8f9b-212e82169ab1"",
+                    ""id"": ""74f829ec-a160-4d2b-9a1b-6df734317a5c"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Throw"",
+                    ""action"": ""Recall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -274,6 +283,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Melee = m_Player.FindAction("Melee", throwIfNotFound: true);
         m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
+        m_Player_Recall = m_Player.FindAction("Recall", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -357,6 +367,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Melee;
     private readonly InputAction m_Player_Throw;
+    private readonly InputAction m_Player_Recall;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -380,6 +391,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Throw".
         /// </summary>
         public InputAction @Throw => m_Wrapper.m_Player_Throw;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Recall".
+        /// </summary>
+        public InputAction @Recall => m_Wrapper.m_Player_Recall;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -415,6 +430,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Throw.started += instance.OnThrow;
             @Throw.performed += instance.OnThrow;
             @Throw.canceled += instance.OnThrow;
+            @Recall.started += instance.OnRecall;
+            @Recall.performed += instance.OnRecall;
+            @Recall.canceled += instance.OnRecall;
         }
 
         /// <summary>
@@ -435,6 +453,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Throw.started -= instance.OnThrow;
             @Throw.performed -= instance.OnThrow;
             @Throw.canceled -= instance.OnThrow;
+            @Recall.started -= instance.OnRecall;
+            @Recall.performed -= instance.OnRecall;
+            @Recall.canceled -= instance.OnRecall;
         }
 
         /// <summary>
@@ -496,5 +517,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnThrow(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Recall" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRecall(InputAction.CallbackContext context);
     }
 }

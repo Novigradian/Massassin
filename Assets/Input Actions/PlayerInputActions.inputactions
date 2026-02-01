@@ -32,6 +32,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Recall",
+                    "type": "Button",
+                    "id": "68926613-83f8-4665-a84a-7cd788ad0f8a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -169,12 +178,12 @@
                 },
                 {
                     "name": "",
-                    "id": "2b4ae9ef-1647-4688-8f9b-212e82169ab1",
+                    "id": "74f829ec-a160-4d2b-9a1b-6df734317a5c",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Throw",
+                    "action": "Recall",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

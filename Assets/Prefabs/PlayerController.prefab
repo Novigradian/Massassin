@@ -50,11 +50,12 @@ MonoBehaviour:
   meleeRadius: 2.5
   possessableLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  throwSpeed: 30
+  throwSpeed: 60
   throwRecoveryTime: 0.5
   arriveDistance: 1
   throwPossessIgnoreTime: 0.05
+  minionMask: {fileID: 0}
