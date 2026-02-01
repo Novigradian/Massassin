@@ -5,12 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f726543-9220-4555-bc7b-fc85075355f4" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/copilotDiffState.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRingZ.shader" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRingZ.shader.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/BlenderFiles/Enemy.blend" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/BlenderFiles/Enemy.blend" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Enemy.fbx" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Enemy.fbx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Materials/New Material 1.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Materials/New Material 1.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level1.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/NavMeshAreas.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/PolygonDungeonRealms/Materials/Misc/FX_Circle_Mat.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/PolygonDungeonRealms/Materials/Misc/FX_Circle_Mat.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level2.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level2.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level3.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level3.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level4.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level4.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaders/MagicRing.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRing.shader" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +26,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Editor/CreateSolidSkyboxMaterial.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://E:/Unity Projects/Massassin/Assets/Scripts/Enemy/AI/NavMeshPatrol.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/MagicRingAutoHeight.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Shaders/CommonShaderMethods.hlsl" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -107,7 +111,7 @@
       <option name="presentableId" value="Default" />
       <updated>1769904358786</updated>
       <workItem from="1769904359559" duration="710000" />
-      <workItem from="1769906107201" duration="7172000" />
+      <workItem from="1769906107201" duration="11776000" />
     </task>
     <servers />
   </component>
