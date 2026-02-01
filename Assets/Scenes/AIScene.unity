@@ -684,7 +684,7 @@ Transform:
   m_GameObject: {fileID: 1659332501}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.6947, y: 0.56, z: 5.62}
+  m_LocalPosition: {x: -0.2, y: 0.56, z: -7.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1172,6 +1172,10 @@ PrefabInstance:
     - target: {fileID: 1041915419806893308, guid: 6c3e9c88d4edb4cf4bd948d01e629f52, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1604021997455813530, guid: 6c3e9c88d4edb4cf4bd948d01e629f52, type: 3}
+      propertyPath: timeBetweenAttacks
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1604021997455813530, guid: 6c3e9c88d4edb4cf4bd948d01e629f52, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
