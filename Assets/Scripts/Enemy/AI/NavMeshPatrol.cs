@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(EnemyVision))]
@@ -226,20 +227,47 @@ public class NavMeshPatrol : MonoBehaviour
             {
                 if (attackTimer <= 0)
                 {
-                    PerformAttack();
+                    PerformAttack(target);
                     attackTimer = timeBetweenAttacks;
                 }
             }
         }
     }
 
-    void PerformAttack()
+    void PerformAttack(Transform target)
     {
         if (combatType == CombatType.Melee)
         {
             Debug.Log("Melee Attack! (Add animation trigger here)");
             // Example: animator.SetTrigger("Attack");
             // Example: player.TakeDamage(10);
+            
+            if (target.gameObject.CompareTag("Mask"))
+            {
+                Debug.Log("You Lose!");
+                // other.GetComponent<PlayerHealth>().TakeDamage(10);
+
+                GameManager.Instance.HandleLose();
+            }
+
+            if (target.gameObject.CompareTag("Enemy"))
+            {
+                Possessable p = target.gameObject.GetComponent<Possessable>();
+                if (p == null) return;
+
+                if (p.isPossessed)
+                {
+                    Debug.Log("Hit Possessed Enemy.");  
+                    p.PossessedDie();
+                }
+
+                if (p.isMinioned)
+                {
+                    p.gameObject.GetComponent<MinionAI>().Die();
+                }
+            }
+
+            
         }
         else // Ranged
         {

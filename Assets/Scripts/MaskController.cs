@@ -56,7 +56,7 @@ public class MaskController : MonoBehaviour
         canMove = true;
         isThrowing = false;
 
-        activeMinions = new List<MinionMask>(maxMinions);
+        activeMinions = new List<MinionMask>(99);
 
         if (Instance != null && Instance != this)
         {
@@ -90,6 +90,8 @@ public class MaskController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (GameManager.Instance.levelEnded) return;
+        
         if (isThrowing)
         {
             HandleThrowMovement();
@@ -172,7 +174,14 @@ public class MaskController : MonoBehaviour
 
     public void PickUpMinion(GameObject minion)
     {
-        activeMinions.Remove(minion.GetComponent<MinionMask>());
+        if (activeMinions.Contains(minion.GetComponent<MinionMask>()))
+        {
+            activeMinions.Remove(minion.GetComponent<MinionMask>());
+        }
+        else
+        {
+            maxMinions++; //picked up new minion, increase max count
+        }
         
         Destroy(minion);
     }
@@ -415,6 +424,11 @@ public class MaskController : MonoBehaviour
         GameObject deadPossessed = controlledTarget.gameObject;
         PossessTarget(maskTarget);
         Destroy(deadPossessed);
+    }
+
+    public void HandleMelee()
+    {
+        
     }
 
 }
