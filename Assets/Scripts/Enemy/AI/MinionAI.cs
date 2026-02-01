@@ -50,7 +50,7 @@ public class MinionAI : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("TargetEnemy"))
+        if (other.CompareTag("TargetEnemy") && GetComponent<Possessable>().isMinioned)
         {
             // Implement logic for when the minion reaches the target enemy
             Debug.Log("Minion has reached the target enemy!");
