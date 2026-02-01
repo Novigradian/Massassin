@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f726543-9220-4555-bc7b-fc85075355f4" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRingZ.shader" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRingZ.shader.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BlenderFiles/Enemy.blend" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/BlenderFiles/Enemy.blend" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/PolygonDungeonRealms/Materials/Misc/FX_Circle_Mat.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/PolygonDungeonRealms/Materials/Misc/FX_Circle_Mat.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level2.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level2.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level3.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level3.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level4.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level4.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Shaders/MagicRing.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRing.shader" afterDir="false" />
-    </list>
+    <list default="true" id="0f726543-9220-4555-bc7b-fc85075355f4" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -111,7 +101,7 @@
       <option name="presentableId" value="Default" />
       <updated>1769904358786</updated>
       <workItem from="1769904359559" duration="710000" />
-      <workItem from="1769906107201" duration="11776000" />
+      <workItem from="1769906107201" duration="12389000" />
     </task>
     <servers />
   </component>
