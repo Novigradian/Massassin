@@ -22,6 +22,7 @@ public class MinionAI : MonoBehaviour
 
         GetComponent<NavMeshPatrol>().enabled = false;
         GetComponent<EnemyVision>().enabled = false;
+        GetComponent<Possessable>().isMinioned = true;
         agent.ResetPath();
 
         mask.SetActive(true);
@@ -42,6 +43,8 @@ public class MinionAI : MonoBehaviour
     public void Die()
     {
         owner.transform.position = transform.position;
+        owner.gameObject.SetActive(true);
+        owner.Land();
         Destroy(gameObject);
     }
 }

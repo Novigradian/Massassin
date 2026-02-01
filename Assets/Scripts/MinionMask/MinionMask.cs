@@ -79,7 +79,7 @@ public class MinionMask : MonoBehaviour
         transform.position = targetPosition; // authoritative snap
     }*/
 
-    void Land()
+    public void Land()
     {
         isFlying = false;
         isLanded = true;

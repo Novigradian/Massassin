@@ -56,8 +56,13 @@ public class EnemyVision : MonoBehaviour
             Transform target = targetsInViewRadius[i].transform;
             Vector3 dirToTarget = (target.position - transform.position).normalized;
 
-            if (target.GetComponent<Possessable>().isPossessed != true)
-                continue;
+            if (target.TryGetComponent<Possessable>(out Possessable possessable))
+            {
+                if (possessable.isPossessed != true && possessable.isMinioned != true)
+                    continue;
+            }
+
+            
 
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {

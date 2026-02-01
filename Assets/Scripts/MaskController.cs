@@ -409,4 +409,12 @@ public class MaskController : MonoBehaviour
         }
     }
 
+    public void PossessedDie()
+    {
+        //possessed target dies, switch back to mask
+        GameObject deadPossessed = controlledTarget.gameObject;
+        PossessTarget(maskTarget);
+        Destroy(deadPossessed);
+    }
+
 }

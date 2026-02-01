@@ -28,8 +28,27 @@ public class EnemyProjectile : MonoBehaviour
         // If it hits the player...
         if (other.CompareTag("Mask"))
         {
-            Debug.Log("Hit Player!");
+            Debug.Log("You Lose!");
             // other.GetComponent<PlayerHealth>().TakeDamage(10);
+
+            //GameManager.Instance.HandleLose();
+        }
+
+        if (other.CompareTag("Enemy"))
+        {
+            Possessable p = other.GetComponent<Possessable>();
+            if (p == null) return;
+
+            if (p.isPossessed)
+            {
+                Debug.Log("Hit Possessed Enemy.");  
+                p.PossessedDie();
+            }
+
+            if (p.isMinioned)
+            {
+                p.gameObject.GetComponent<MinionAI>().Die();
+            }
         }
 
         // Destroy bullet on impact with anything (walls, floor, player)
