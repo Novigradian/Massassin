@@ -59,6 +59,6 @@ MonoBehaviour:
   arriveDistance: 1
   throwPossessIgnoreTime: 0.05
   minionPrefab: {fileID: -2773877453858711313, guid: f239c5118937e5c42b0eae8b63957614, type: 3}
-  minionThrowGap: 1.5
+  minionThrowGap: 2
   maxMinions: 0
   activeMinions: []

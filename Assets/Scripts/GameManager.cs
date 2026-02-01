@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public bool levelEnded = false;
+
+    public int maxMinion;
     
     void Awake()
     {
@@ -29,7 +31,7 @@ public class GameManager : MonoBehaviour
             HandleWin();
         }
     }
-    void HandleWin()
+    public void HandleWin()
     {
         if (levelEnded) return;
         
@@ -40,6 +42,8 @@ public class GameManager : MonoBehaviour
         //Invoke(nameof(LoadNextLevel), 1.5f);
 
         Canvas.Instance.ShowWinPanel();
+
+        maxMinion = MaskController.Instance.maxMinions;
     }
 
     public void NextLevelBtn()
@@ -83,7 +87,7 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        maxMinion = -1;
     }
 
     // Update is called once per frame

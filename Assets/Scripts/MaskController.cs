@@ -31,7 +31,7 @@ public class MaskController : MonoBehaviour
     [Header("ThrowMinion")]
     [SerializeField] private MinionMask minionPrefab;
     [SerializeField] private float minionThrowGap=1.5f;
-    [SerializeField] private int maxMinions = 3;
+    public int maxMinions = 3;
     
     public List<MinionMask> activeMinions;
 
@@ -67,6 +67,15 @@ public class MaskController : MonoBehaviour
         Instance = this;
 
         Canvas.Instance.UpdateMaskCount(maxMinions);
+    }
+
+    void Start()
+    {
+        if (GameManager.Instance.maxMinion >= 0)
+        {
+            maxMinions = GameManager.Instance.maxMinion;
+            Canvas.Instance.UpdateMaskCount(maxMinions);
+        }
     }
 
     void OnEnable()
