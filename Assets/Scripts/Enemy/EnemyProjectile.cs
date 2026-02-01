@@ -31,7 +31,7 @@ public class EnemyProjectile : MonoBehaviour
             Debug.Log("You Lose!");
             // other.GetComponent<PlayerHealth>().TakeDamage(10);
 
-            //GameManager.Instance.HandleLose();
+            GameManager.Instance.HandleLose();
         }
 
         if (other.CompareTag("Enemy"))

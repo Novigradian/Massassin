@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
     }
     void HandleWin()
     {
+        if (levelEnded) return;
+        
         levelEnded = true;
         Debug.Log("YOU WIN");
 
@@ -53,7 +55,8 @@ public class GameManager : MonoBehaviour
         levelEnded = true;
         Debug.Log("YOU LOSE");
 
-        Invoke(nameof(ReloadLevel), 1.5f);
+        //Invoke(nameof(ReloadLevel), 1.5f);
+        Canvas.Instance.ShowLosePanel();
     }
 
     void ReloadLevel()
