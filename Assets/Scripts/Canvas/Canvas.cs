@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor; // Allows us to stop the game in the editor
 #endif
+using TMPro;
 
 public class Canvas : MonoBehaviour
 {
@@ -27,6 +28,10 @@ public class Canvas : MonoBehaviour
     [Tooltip("The panel that appears when player wins")]
     public GameObject winPanel;
 
+    [Tooltip("The panel during gameplay")]
+    public GameObject HUD;
+    public TextMeshProUGUI maskCountText;
+
     public bool isTesting = false;
 
     private void Awake()
@@ -45,7 +50,30 @@ public class Canvas : MonoBehaviour
     private void Start()
     {
         // Ensure we start in the correct state (Main Menu Open, others Closed)
-        if (!isTesting) ShowMainMenu();  
+        if (!isTesting && SceneManager.GetActiveScene().buildIndex==0) ShowMainMenu();  
+    }
+
+    
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Loaded scene index: " + scene.buildIndex);
+        if (scene.buildIndex == 0)
+        {
+            ShowMainMenu();
+        }
+        else{
+            ShowHUD();
+        }
     }
 
     // --- BUTTON FUNCTIONS ---
@@ -98,16 +126,33 @@ public class Canvas : MonoBehaviour
         if(levelSelectionPanel) levelSelectionPanel.SetActive(false);
         if(settingsPanel) settingsPanel.SetActive(false);
         if(creditsPanel) creditsPanel.SetActive(false);
+        if(HUD) HUD.SetActive(false);
+        if(losePanel) losePanel.SetActive(false);
+        if(winPanel) winPanel.SetActive(false);
+    }
+
+    public void ShowHUD()
+    {
+        HUD.SetActive(true);
+        losePanel.SetActive(false);
+        winPanel.SetActive(false);
+    }
+
+    public void UpdateMaskCount(int cnt)
+    {
+        maskCountText.text = "MasksRemaining: " + cnt;
     }
 
     public void ShowLosePanel()
     {
         losePanel.SetActive(true);
+        HUD.SetActive(false);
     }
 
     public void ShowWinPanel()
     {
         winPanel.SetActive(true);
+        HUD.SetActive(false);
     }
 
     public void ReloadCurrentLevel()

@@ -65,7 +65,8 @@ public class MaskController : MonoBehaviour
         }
 
         Instance = this;
-        
+
+        Canvas.Instance.UpdateMaskCount(maxMinions);
     }
 
     void OnEnable()
@@ -158,6 +159,8 @@ public class MaskController : MonoBehaviour
 
         minion.Launch(direction);
         activeMinions.Add(minion);
+
+        Canvas.Instance.UpdateMaskCount(maxMinions - activeMinions.Count);
     }
     
 
@@ -182,6 +185,8 @@ public class MaskController : MonoBehaviour
         {
             maxMinions++; //picked up new minion, increase max count
         }
+
+        Canvas.Instance.UpdateMaskCount(maxMinions - activeMinions.Count);
         
         Destroy(minion);
     }
