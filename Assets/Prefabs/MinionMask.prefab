@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: 2938544590513992065}
   - component: {fileID: 9107619374367575554}
   - component: {fileID: 36468894558801580}
+  - component: {fileID: -2773877453858711313}
   m_Layer: 0
   m_Name: MinionMask
   m_TagString: Untagged
@@ -236,11 +237,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.5, y: 6.21, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &9107619374367575554
 Rigidbody:
@@ -291,6 +292,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-2773877453858711313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5561785912985951991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef2f23073787c6c4f933caa161d69580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MinionMask
+  throwSpeed: 60
+  arriveDistance: 0.5
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  possessableLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1001 &7012448607928291395
 PrefabInstance:
   m_ObjectHideFlags: 0

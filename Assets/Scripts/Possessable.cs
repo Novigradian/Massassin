@@ -24,7 +24,14 @@ public class Possessable : MonoBehaviour
     {
         if (!isPossessed) return;
         
-        maskController.TryPossessTarget(other);
+        maskController.TryPossessTarget(other.gameObject);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!isPossessed) return;
+        
+        maskController.TryPossessTarget(collision.gameObject);
     }
 
     public void ToggleMask(bool state)

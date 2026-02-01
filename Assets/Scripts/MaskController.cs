@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class MaskController : MonoBehaviour
 {
     //public GameObject mainCamera;
+    public static MaskController Instance { get; private set; }
     
     [Header("Targets")]
     public Transform controlledTarget;
@@ -25,6 +27,13 @@ public class MaskController : MonoBehaviour
     [SerializeField] private float arriveDistance;
     [SerializeField] private float throwPossessIgnoreTime = 0.15f;
     private float throwStartTime;
+
+    [Header("ThrowMinion")]
+    [SerializeField] private MinionMask minionPrefab;
+    [SerializeField] private float minionThrowGap=1.5f;
+    [SerializeField] private int maxMinions = 3;
+    
+    public List<MinionMask> activeMinions;
 
     private Rigidbody rb;
     private PlayerInputActions input;
@@ -47,7 +56,15 @@ public class MaskController : MonoBehaviour
         canMove = true;
         isThrowing = false;
 
-        
+        activeMinions = new List<MinionMask>(maxMinions);
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
         
     }
 
@@ -56,15 +73,19 @@ public class MaskController : MonoBehaviour
         input.Player.Enable();
         input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         input.Player.Move.canceled += _ => moveInput = Vector2.zero;
-        input.Player.Throw.performed += _ => TryThrow();
+        //input.Player.Throw.performed += _ => TryThrow();
+        input.Player.Throw.performed += _ => TryThrowMinion();
         input.Player.Melee.performed += _ => TryMeleePossess();
+        //input.Player.Recall.performed += _ => RecallAllMinions();
     }
 
     void OnDisable()
     {
-        input.Player.Throw.performed -= _ => TryThrow();
+        //input.Player.Throw.performed -= _ => TryThrow();
+        input.Player.Throw.performed -= _ => TryThrowMinion();
         input.Player.Disable();
         input.Player.Melee.performed -= _ => TryMeleePossess();
+        //input.Player.Recall.performed -= _ => RecallAllMinions();
     }
 
     void FixedUpdate()
@@ -89,6 +110,69 @@ public class MaskController : MonoBehaviour
         {
             FaceMousePosition();
         }
+    }
+
+    void TryThrowMinion()
+    {
+        /*//Debug.Log($"Minions: {activeMinions.Count} / {maxMinions}");
+
+        if (activeMinions.Count >= maxMinions) return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        if (!Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
+            return;
+
+        MinionMask minion = Instantiate(
+            minionPrefab,
+            controlledTarget.position,
+            Quaternion.identity
+        );
+
+        minion.Launch(hit.point);
+        activeMinions.Add(minion);*/
+
+        if (activeMinions.Count >= maxMinions) return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Plane groundPlane = new Plane(Vector3.up, controlledTarget.position);
+
+        if (!groundPlane.Raycast(ray, out float enter))
+            return;
+
+        Vector3 hitPoint = ray.GetPoint(enter);
+        Vector3 direction = hitPoint - controlledTarget.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude < 0.01f)
+            return;
+
+        MinionMask minion = Instantiate(
+            minionPrefab,
+            controlledTarget.position + controlledTarget.forward * minionThrowGap,
+            Quaternion.LookRotation(direction)
+        );
+
+        minion.Launch(direction);
+        activeMinions.Add(minion);
+    }
+    
+
+    /*void RecallAllMinions()
+    {
+        foreach (var minion in activeMinions)
+        {
+            if (minion != null)
+                minion.Recall(controlledTarget.position);
+        }
+
+        activeMinions.Clear();
+    }*/
+
+    public void PickUpMinion(GameObject minion)
+    {
+        activeMinions.Remove(minion.GetComponent<MinionMask>());
+        
+        Destroy(minion);
     }
 
     void TryThrow()
@@ -228,6 +312,9 @@ public class MaskController : MonoBehaviour
 
         if (enemy.TryGetComponent<EnemyVision>(out var vision))
             vision.enabled = !isPlayerControlled;
+        
+        if (enemy.TryGetComponent<BoxCollider>(out var boxCollider))
+            boxCollider.isTrigger = !isPlayerControlled;
     }
 
     void FaceMousePosition()
@@ -253,7 +340,7 @@ public class MaskController : MonoBehaviour
         rb.MoveRotation(smoothed);
     }
 
-    public void TryPossessTarget(Collider other)
+    public void TryPossessTarget(GameObject other)
     {
         if (isThrowing)
         {
