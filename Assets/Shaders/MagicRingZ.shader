@@ -9,7 +9,6 @@ Shader "Custom/MagicRingZ"
         _UpAxis ("Up Axis (0=X,1=Y,2=Z)", Range(0,2)) = 1
         _ForwardAxis ("Forward Axis (0=X,1=Y,2=Z)", Range(0,2)) = 0
         _AngleOffset ("Angle Offset (deg)", Range(0,360)) = 0
-        _SoftParticleFade ("Soft Particle Fade Distance", Range(0.01, 10)) = 1.0
     }
     SubShader
     {
@@ -29,7 +28,6 @@ Shader "Custom/MagicRingZ"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             #include "CommonShaderMethods.hlsl"
 
             float _Power;
@@ -38,7 +36,6 @@ Shader "Custom/MagicRingZ"
             float _UpAxis;
             float _ForwardAxis;
             float _AngleOffset;
-            float _SoftParticleFade;
 
             struct appdata
             {
@@ -50,7 +47,6 @@ Shader "Custom/MagicRingZ"
             {
                 float3 posOS : TEXCOORD0; // object-space position
                 float4 vertex : SV_POSITION;
-                float4 screenPos : TEXCOORD1; // screen position for depth comparison
             };
 
             v2f vert(appdata v)
@@ -60,8 +56,6 @@ Shader "Custom/MagicRingZ"
                 o.vertex = TransformObjectToHClip(v.vertex);
                 // Pass full object-space position to fragment shader
                 o.posOS = v.vertex.xyz;
-                // Compute screen position for depth comparison
-                o.screenPos = ComputeScreenPos(o.vertex);
                 return o;
             }
 
@@ -84,13 +78,6 @@ Shader "Custom/MagicRingZ"
 
             float4 frag(v2f i) : SV_Target
             {
-                // Soft Particle Depth Fade
-                float2 screenUV = i.screenPos.xy / i.screenPos.w;
-                float sceneDepth = LinearEyeDepth(SampleSceneDepth(screenUV), _ZBufferParams);
-                float particleDepth = LinearEyeDepth(i.screenPos.z / i.screenPos.w, _ZBufferParams);
-                float depthDiff = sceneDepth - particleDepth;
-                float depthFade = saturate(depthDiff / _SoftParticleFade);
-                
                 // Use object-space position but allow user to pick which axis is 'up'
                 float3 pos = i.posOS;
 
@@ -139,9 +126,9 @@ Shader "Custom/MagicRingZ"
 
                 float v = noise * pow(h, _Power) * radialFalloff;
 
-                // Color + alpha with depth fade applied
+                // Color + alpha
                 float4 col = _MainColor * saturate(v);
-                col.a = saturate(v) * depthFade; // Apply depth fade to alpha
+                col.a = saturate(v);
                 return col;
             }
             ENDHLSL
