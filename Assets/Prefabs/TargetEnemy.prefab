@@ -286,11 +286,7 @@ MonoBehaviour:
   timeBetweenAttacks: 1.5
   projectilePrefab: {fileID: 0}
   firePoint: {fileID: 0}
-  patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  patrolPoints: []
   patrolSpeed: 3.5
   waitTime: 0.4
   turnSpeed: 135
@@ -449,7 +445,7 @@ PrefabInstance:
     - target: {fileID: -8016412588606473749, guid: 508c18b8bfa5f3b4387eacbc0d2c26d3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 67d1debde370fbf4e8548a276f149ec9, type: 2}
+      objectReference: {fileID: 2100000, guid: 9b6c7782d0f89d048be8a5dcd0afb311, type: 2}
     - target: {fileID: -8016412588606473749, guid: 508c18b8bfa5f3b4387eacbc0d2c26d3, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
@@ -469,7 +465,7 @@ PrefabInstance:
     - target: {fileID: -3349412186038797840, guid: 508c18b8bfa5f3b4387eacbc0d2c26d3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: fafe0c8cf0ef3b6478297ddf3fcd8315, type: 2}
+      objectReference: {fileID: 2100000, guid: 9b6c7782d0f89d048be8a5dcd0afb311, type: 2}
     - target: {fileID: -1028401375704162923, guid: 508c18b8bfa5f3b4387eacbc0d2c26d3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -485,7 +481,7 @@ PrefabInstance:
     - target: {fileID: 4631837917492017835, guid: 508c18b8bfa5f3b4387eacbc0d2c26d3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 67d1debde370fbf4e8548a276f149ec9, type: 2}
+      objectReference: {fileID: 2100000, guid: 447094d1483034342888d9cfff081b69, type: 2}
     - target: {fileID: 4631837917492017835, guid: 508c18b8bfa5f3b4387eacbc0d2c26d3, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
@@ -501,7 +497,7 @@ PrefabInstance:
     - target: {fileID: 7831909060113432234, guid: 508c18b8bfa5f3b4387eacbc0d2c26d3, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: fafe0c8cf0ef3b6478297ddf3fcd8315, type: 2}
+      objectReference: {fileID: 2100000, guid: 9b6c7782d0f89d048be8a5dcd0afb311, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
