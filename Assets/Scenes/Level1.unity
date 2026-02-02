@@ -2408,6 +2408,8 @@ MonoBehaviour:
   firePoint: {fileID: 0}
   referenceAttackInterval: 1
   attackSpeedParameterName: AttackSpeed
+  moveSpeedParameterName: Speed
+  moveSpeedZeroThreshold: 0.05
   patrolPoints:
   - {fileID: 9453269}
   - {fileID: 1108813381}
