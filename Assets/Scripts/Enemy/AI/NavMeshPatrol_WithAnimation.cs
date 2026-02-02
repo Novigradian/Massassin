@@ -20,7 +20,6 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     
     [Header("Animation Settings")]
     [SerializeField] private float referenceAttackInterval = 1f; // 参考攻击间隔（动画速度为1时的完美间隔）
-    [SerializeField] private string attackSpeedParameterName = "AttackSpeed"; // Animator中的攻击速度参数名
 
     // New: parameter name used to drive movement/walk animation (common convention: "Speed")
     [SerializeField] private string moveSpeedParameterName = "Speed";
@@ -34,6 +33,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
 
     // cached animator parameter ids
     private int moveSpeedParamHash = -1;
+    private int attackTriggerHash = -1;
 
     [Header("Patrol Settings")]
     [SerializeField] private float patrolSpeed = 3.5f;
@@ -70,6 +70,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         if (animator != null)
         {
             moveSpeedParamHash = Animator.StringToHash(moveSpeedParameterName);
+            attackTriggerHash = Animator.StringToHash("Attack");
         }
 
         currentState = State.Patrolling;
@@ -226,6 +227,9 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
             animator.speed = computedAnimatorSpeed;
             animatorSpeedOverridden = true;
         }
+
+        // Debug output to help verify values at runtime
+        Debug.Log($"[NavMeshPatrol] StartAttacking: computedAnimatorSpeed={computedAnimatorSpeed:F3}, computedProjectileDelay={computedProjectileDelay:F3}");
     }
 
     void StartSearching()
@@ -324,7 +328,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         // Trigger attack animation
         if (animator != null)
         {
-            animator.SetTrigger("Attack");
+            animator.SetTrigger(attackTriggerHash);
         }
 
         if (combatType == CombatType.Melee)
