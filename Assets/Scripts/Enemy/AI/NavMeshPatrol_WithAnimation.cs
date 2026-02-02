@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
-using Unity.VisualScripting;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(EnemyVision))]
@@ -15,7 +14,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     [SerializeField] private CombatType combatType;
     [SerializeField] private float attackRange = 2f; // Distance to stop and attack
     [SerializeField] private float timeBetweenAttacks = 1.5f;
-    [SerializeField] private float projectileSpawnDelay = 0.2f; // 攻击动画后子弹发射延迟
+    [SerializeField] private float projectileSpawnDelay = 0.2f; // Only for Ranged (treated as reference delay at referenceAttackInterval)
     [SerializeField] private GameObject projectilePrefab; // Only for Ranged
     [SerializeField] private Transform firePoint; // Where projectiles spawn
     
@@ -23,11 +22,18 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     [SerializeField] private float referenceAttackInterval = 1f; // 参考攻击间隔（动画速度为1时的完美间隔）
     [SerializeField] private string attackSpeedParameterName = "AttackSpeed"; // Animator中的攻击速度参数名
 
+    // New: parameter name used to drive movement/walk animation (common convention: "Speed")
+    [SerializeField] private string moveSpeedParameterName = "Speed";
+    [SerializeField] private float moveSpeedZeroThreshold = 0.05f; // below this we treat movement as zero
+
     [Header("References")]
     [SerializeField] private Transform[] patrolPoints;
     private EnemyVision vision;
     private NavMeshAgent agent;
     [SerializeField]private Animator animator;
+
+    // cached animator parameter ids
+    private int moveSpeedParamHash = -1;
 
     [Header("Patrol Settings")]
     [SerializeField] private float patrolSpeed = 3.5f;
@@ -49,14 +55,29 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     private Vector3 lastKnownPosition;
     private float attackTimer = 0f; // Counts down to next attack
 
+    // --- Computed runtime values for animations/projectiles ---
+    private float computedProjectileDelay = 0.2f;
+    private float computedAnimatorSpeed = 1f;
+    private bool animatorSpeedOverridden = false;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         vision = GetComponent<EnemyVision>();
         animator = GetComponent<Animator>();
 
+        // cache animator parameter ids to avoid repeated string lookups
+        if (animator != null)
+        {
+            moveSpeedParamHash = Animator.StringToHash(moveSpeedParameterName);
+        }
+
         currentState = State.Patrolling;
         agent.speed = patrolSpeed;
+
+        // initialize computed values from serialized defaults
+        computedProjectileDelay = projectileSpawnDelay;
+        computedAnimatorSpeed = 1f;
 
         if (patrolPoints != null && patrolPoints.Length > 0)
         {
@@ -68,6 +89,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     {
         StopAllCoroutines();
         isWaiting = false;
+        RestoreAnimatorSpeed();
     }
 
 
@@ -92,6 +114,30 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
             case State.Attacking:
                 AttackUpdate();
                 break;
+        }
+
+        // Update movement parameter so walk animation doesn't play when nearly stopped or when animations are effectively paused
+        if (animator != null && agent != null)
+        {
+            float moveVal = agent.velocity.magnitude;
+
+            // If animator.speed is approximately zero, force movement param to 0 so walk animation doesn't play
+            if (Mathf.Abs(animator.speed) <= 0.001f)
+            {
+                if (moveSpeedParamHash != -1)
+                    animator.SetFloat(moveSpeedParamHash, 0f);
+                else
+                    animator.SetFloat(moveSpeedParameterName, 0f);
+            }
+            else
+            {
+                // If movement is very small, set to exact zero to avoid jitter
+                float outVal = moveVal < moveSpeedZeroThreshold ? 0f : moveVal;
+                if (moveSpeedParamHash != -1)
+                    animator.SetFloat(moveSpeedParamHash, outVal);
+                else
+                    animator.SetFloat(moveSpeedParameterName, outVal);
+            }
         }
     }
 
@@ -154,6 +200,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         agent.isStopped = false; // Make sure we can move
         agent.speed = chaseSpeed;
         StopLooking();
+        RestoreAnimatorSpeed();
     }
 
     void StartAttacking()
@@ -163,6 +210,22 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         currentState = State.Attacking;
         agent.isStopped = true; // Stop moving to shoot/hit
         StopLooking();
+
+        // Compute animator speed and projectile delay based on timeBetweenAttacks and referenceAttackInterval
+        float safeAttackInterval = Mathf.Max(0.01f, timeBetweenAttacks);
+        float safeReference = Mathf.Max(0.0001f, referenceAttackInterval);
+
+        computedAnimatorSpeed = safeReference / safeAttackInterval; // e.g. ref=1, attackInterval=0.5 => speed=2
+
+        // projectileSpawnDelay is treated as the reference delay when referenceAttackInterval is used
+        computedProjectileDelay = projectileSpawnDelay * (safeAttackInterval / safeReference);
+
+        // apply animator speed override
+        if (animator != null)
+        {
+            animator.speed = computedAnimatorSpeed;
+            animatorSpeedOverridden = true;
+        }
     }
 
     void StartSearching()
@@ -173,6 +236,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         agent.isStopped = false;
         agent.speed = chaseSpeed;
         agent.SetDestination(lastKnownPosition);
+        RestoreAnimatorSpeed();
     }
 
     void ReturnToPatrol()
@@ -180,6 +244,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         currentState = State.Patrolling;
         agent.isStopped = false;
         agent.speed = patrolSpeed;
+        RestoreAnimatorSpeed();
         if (patrolPoints.Length > 0)
         {
             agent.SetDestination(patrolPoints[currentPointIndex].position);
@@ -190,6 +255,16 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     {
         if (activeLookCoroutine != null) StopCoroutine(activeLookCoroutine);
         isWaiting = false;
+    }
+
+    // New helper to restore animator speed when not attacking
+    void RestoreAnimatorSpeed()
+    {
+        if (animator != null && animatorSpeedOverridden)
+        {
+            animator.speed = 1f;
+            animatorSpeedOverridden = false;
+        }
     }
 
     // --- BEHAVIORS ---
@@ -287,7 +362,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         {
             Debug.Log("Pew Pew! (Shooting)");
             // Delay projectile spawning
-            StartCoroutine(FireProjectileWithDelay(projectileSpawnDelay));
+            StartCoroutine(FireProjectileWithDelay(computedProjectileDelay));
         }
     }
 
