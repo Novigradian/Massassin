@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
 
         if (newTarget.CompareTag("TargetEnemy"))
         {
+            Destroy(newTarget.gameObject);
             HandleWin();
         }
     }
@@ -48,7 +49,7 @@ public class GameManager : MonoBehaviour
 
     public void NextLevelBtn()
     {
-        Invoke(nameof(LoadNextLevel), 1.5f);
+        LoadNextLevel();
         Debug.Log("Next Level Button Pressed");
     }
 

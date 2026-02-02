@@ -324,6 +324,7 @@ public class MaskController : MonoBehaviour
             }
         }
 
+
         if (enemy.TryGetComponent<Rigidbody>(out var enemyRb))
         {
             enemyRb.isKinematic = !isPlayerControlled;
@@ -333,6 +334,12 @@ public class MaskController : MonoBehaviour
         {
             patrol.enabled = !isPlayerControlled;
             //if (!isPlayerControlled) patrol.RestartPatrol();
+        }
+
+        if (enemy.TryGetComponent<NavMeshPatrol_WithAnimation>(out var patrolWithAnim))
+        {
+            patrolWithAnim.enabled = !isPlayerControlled;
+            //if (!isPlayerControlled) patrolWithAnim.RestartPatrol();
         }
             
 
