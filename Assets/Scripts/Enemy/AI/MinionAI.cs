@@ -54,9 +54,9 @@ public class MinionAI : MonoBehaviour
         {
             // Implement logic for when the minion reaches the target enemy
             Debug.Log("Minion has reached the target enemy!");
-            Destroy(other.gameObject);
+            //Destroy(other.gameObject);
             // For example, deal damage or trigger an event
-            GameManager.Instance.HandleWin();
+            //GameManager.Instance.HandleWin();
         }
     }
 }
