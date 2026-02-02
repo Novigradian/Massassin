@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MaskController
   controlledTarget: {fileID: 0}
   maskTarget: {fileID: 0}
-  moveSpeed: 17
+  moveSpeed: 10
   meleeRadius: 2.5
   possessableLayer:
     serializedVersion: 2
