@@ -5,17 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f726543-9220-4555-bc7b-fc85075355f4" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/NavMeshPatrol_WithAnimationEditor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/copilotDiffState.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Massassin/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animation/EnemyAnims/Standing 1H Magic Attack 01.fbx.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animation/EnemyAnims/Standing 1H Magic Attack 01.fbx.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/IntroLevel.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/IntroLevel.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Jerry Testing/RangedEnemy (1) 1.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Jerry Testing/RangedEnemy (1) 1.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Mask.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Mask.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level1.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Level3.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Level3.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enemy/AI/NavMeshPatrol_WithAnimation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enemy/AI/NavMeshPatrol_WithAnimation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Settings/DefaultVolumeProfile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/DefaultVolumeProfile.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Shaders/MagicRingZ.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/MagicRingZ.shader" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF - Fallback.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UIArts/Fonts/THE GONjURING SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UIArts/Fonts/THE GONjURING SDF.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +111,7 @@
       <updated>1769904358786</updated>
       <workItem from="1769904359559" duration="710000" />
       <workItem from="1769906107201" duration="12389000" />
-      <workItem from="1769980847158" duration="2676000" />
+      <workItem from="1769980847158" duration="6909000" />
     </task>
     <servers />
   </component>

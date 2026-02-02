@@ -18,17 +18,16 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     [SerializeField] private float projectileSpawnDelay = 0.2f; // 攻击动画后子弹发射延迟
     [SerializeField] private GameObject projectilePrefab; // Only for Ranged
     [SerializeField] private Transform firePoint; // Where projectiles spawn
+    
+    [Header("Animation Settings")]
+    [SerializeField] private float referenceAttackInterval = 1f; // 参考攻击间隔（动画速度为1时的完美间隔）
+    [SerializeField] private string attackSpeedParameterName = "AttackSpeed"; // Animator中的攻击速度参数名
 
     [Header("References")]
     [SerializeField] private Transform[] patrolPoints;
     private EnemyVision vision;
     private NavMeshAgent agent;
-    [SerializeField] private Animator animator;
-
-    [Header("Animation Settings")]
-    [SerializeField] private bool useRootMotion = true;
-    [SerializeField] private string speedParameterName = "Speed"; // Animator参数名称
-    [SerializeField] private float animationSpeedMultiplier = 1f; // 动画速度倍增器
+    [SerializeField]private Animator animator;
 
     [Header("Patrol Settings")]
     [SerializeField] private float patrolSpeed = 3.5f;
@@ -56,13 +55,6 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         vision = GetComponent<EnemyVision>();
         animator = GetComponent<Animator>();
 
-        // 配置NavMeshAgent使用Root Motion
-        if (useRootMotion)
-        {
-            agent.updatePosition = false; // 禁用NavMeshAgent的位置更新
-            agent.updateRotation = true;  // 保留旋转控制
-        }
-
         currentState = State.Patrolling;
         agent.speed = patrolSpeed;
 
@@ -78,32 +70,11 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         isWaiting = false;
     }
 
-    void OnAnimatorMove()
-    {
-        // 使用Root Motion时，将Animator的移动应用到NavMeshAgent
-        if (useRootMotion && animator != null && agent != null)
-        {
-            // 应用Root Motion的位置变化
-            Vector3 newPosition = animator.rootPosition;
-            newPosition.y = agent.nextPosition.y; // 保持NavMesh的Y轴高度
-            transform.position = newPosition;
-            
-            // 同步NavMeshAgent，让它知道当前位置
-            agent.nextPosition = newPosition;
-        }
-    }
 
     void Update()
     {
         if (attackTimer > 0) attackTimer -= Time.deltaTime;
 
-        // 更新Animator的速度参数
-        if (useRootMotion && animator != null && agent != null)
-        {
-            // 使用desiredVelocity而不是velocity，这样即使位置由动画控制，速度参数也是正确的
-            float currentSpeed = agent.desiredVelocity.magnitude;
-            animator.SetFloat(speedParameterName, currentSpeed * animationSpeedMultiplier);
-        }
 
         CheckVision();
 
@@ -336,7 +307,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     {
         if (isWaiting) return;
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < 0.8f)
         {
             activeLookCoroutine = StartCoroutine(LookAroundRoutine(true));
         }
@@ -347,7 +318,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         if (isWaiting) return;
         if (patrolPoints.Length == 0) return;
 
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < 0.8f)
         {
             activeLookCoroutine = StartCoroutine(LookAroundRoutine(false));
         }
@@ -374,7 +345,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
 
     IEnumerator RotateToTarget(Quaternion targetRotation)
     {
-        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
+        while (Quaternion.Angle(transform.rotation, targetRotation) > 1f)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
             yield return null;

@@ -9,7 +9,7 @@ Shader "Custom/MagicRingZ"
         _UpAxis ("Up Axis (0=X,1=Y,2=Z)", Range(0,2)) = 1
         _ForwardAxis ("Forward Axis (0=X,1=Y,2=Z)", Range(0,2)) = 0
         _AngleOffset ("Angle Offset (deg)", Range(0,360)) = 0
-        _SoftParticleFade ("Soft Particle Fade Distance", Range(0.01, 10)) = 1.0
+    }
     SubShader
     {
         // No culling or depth
@@ -29,7 +29,7 @@ Shader "Custom/MagicRingZ"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "CommonShaderMethods.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+
             float _Power;
             float3 _Scale;
             float4 _Speed, _MainColor;
@@ -38,7 +38,7 @@ Shader "Custom/MagicRingZ"
             float _AngleOffset;
 
             struct appdata
-            float _SoftParticleFade;
+            {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
@@ -50,7 +50,7 @@ Shader "Custom/MagicRingZ"
             };
 
             v2f vert(appdata v)
-                float4 screenPos : TEXCOORD1; // screen position for depth comparison
+            {
                 v2f o;
                 // Keep built-in transform for clip position
                 o.vertex = TransformObjectToHClip(v.vertex);
@@ -60,8 +60,8 @@ Shader "Custom/MagicRingZ"
             }
 
             sampler2D _MainTex;
-                // Compute screen position for depth comparison
-                o.screenPos = ComputeScreenPos(o.vertex);
+
+            // Simple FBM-like summation to reduce symmetry artifacts
             float NoiseFBM(float2 p)
             {
                 return GradientNoise(p * 1.0, 1);
@@ -84,13 +84,13 @@ Shader "Custom/MagicRingZ"
                 // Determine integer axis indices (0,1,2) from properties
                 float upIdxF = round(_UpAxis);
                 float forwardIdxF = round(_ForwardAxis);
-                // Soft Particle Depth Fade
-                float2 screenUV = i.screenPos.xy / i.screenPos.w;
-                float sceneDepth = LinearEyeDepth(SampleSceneDepth(screenUV), _ZBufferParams);
-                float particleDepth = LinearEyeDepth(i.screenPos.z / i.screenPos.w, _ZBufferParams);
-                float depthDiff = sceneDepth - particleDepth;
-                float depthFade = saturate(depthDiff / _SoftParticleFade);
-                
+
+                // If user accidentally picked same axis for forward and up, pick a different forward (fallback)
+                if (abs(forwardIdxF - upIdxF) < 0.01)
+                {
+                    forwardIdxF = fmod(forwardIdxF + 1.0, 3.0);
+                }
+
                 // Compute the remaining radial axis index (0+1+2 = 3)
                 float otherIdxF = 3.0 - upIdxF - forwardIdxF;
 
