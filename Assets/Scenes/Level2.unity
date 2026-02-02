@@ -1300,6 +1300,7 @@ MonoBehaviour:
   referenceAttackInterval: 1
   moveSpeedParameterName: Speed
   moveSpeedZeroThreshold: 0.05
+  idleBoolParameterName: Idle
   patrolPoints:
   - {fileID: 2146521869}
   - {fileID: 1984644817}
@@ -7154,6 +7155,7 @@ MonoBehaviour:
   referenceAttackInterval: 1
   moveSpeedParameterName: Speed
   moveSpeedZeroThreshold: 0.05
+  idleBoolParameterName: Idle
   patrolPoints:
   - {fileID: 666198362}
   - {fileID: 666198361}
@@ -13424,6 +13426,7 @@ MonoBehaviour:
   referenceAttackInterval: 1
   moveSpeedParameterName: Speed
   moveSpeedZeroThreshold: 0.05
+  idleBoolParameterName: Idle
   patrolPoints:
   - {fileID: 1116621099}
   - {fileID: 1116621100}
@@ -14811,8 +14814,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2977132296877676220}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 10.18623, y: 1, z: 22.77}
+  m_LocalRotation: {x: -0, y: 0.13052888, z: -0, w: -0.9914446}
+  m_LocalPosition: {x: 10.91, y: 1, z: 22.08}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -14820,7 +14823,7 @@ Transform:
   - {fileID: 8334610973478813232}
   - {fileID: 2958776223818640097}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 345, z: 0}
 --- !u!4 &3736965510252848738
 Transform:
   m_ObjectHideFlags: 0
@@ -15887,6 +15890,7 @@ MonoBehaviour:
   referenceAttackInterval: 1
   moveSpeedParameterName: Speed
   moveSpeedZeroThreshold: 0.05
+  idleBoolParameterName: Idle
   patrolPoints: []
   animator: {fileID: 0}
   patrolSpeed: 4
@@ -17044,6 +17048,7 @@ MonoBehaviour:
   referenceAttackInterval: 1
   moveSpeedParameterName: Speed
   moveSpeedZeroThreshold: 0.05
+  idleBoolParameterName: Idle
   patrolPoints: []
   animator: {fileID: 5745541149630794791}
   patrolSpeed: 0
