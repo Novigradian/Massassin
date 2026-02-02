@@ -20,11 +20,13 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
     
     [Header("Animation Settings")]
     [SerializeField] private float referenceAttackInterval = 1f; // 参考攻击间隔（动画速度为1时的完美间隔）
-    [SerializeField] private string attackSpeedParameterName = "AttackSpeed"; // Animator中的攻击速度参数名
 
     // New: parameter name used to drive movement/walk animation (common convention: "Speed")
     [SerializeField] private string moveSpeedParameterName = "Speed";
     [SerializeField] private float moveSpeedZeroThreshold = 0.05f; // below this we treat movement as zero
+
+    // New: idle parameter name (bool) to explicitly switch to idle when speed ≈ 0
+    [SerializeField] private string idleBoolParameterName = "Idle";
 
     [Header("References")]
     [SerializeField] private Transform[] patrolPoints;
@@ -34,6 +36,9 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
 
     // cached animator parameter ids
     private int moveSpeedParamHash = -1;
+    private int attackTriggerHash = -1;
+    private int idleParamHash = -1;
+    private bool hasIdleParam = false;
 
     [Header("Patrol Settings")]
     [SerializeField] private float patrolSpeed = 3.5f;
@@ -70,6 +75,18 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         if (animator != null)
         {
             moveSpeedParamHash = Animator.StringToHash(moveSpeedParameterName);
+            attackTriggerHash = Animator.StringToHash("Attack");
+
+            // detect whether animator has an Idle bool parameter and cache it
+            foreach (var p in animator.parameters)
+            {
+                if (p.name == idleBoolParameterName && p.type == AnimatorControllerParameterType.Bool)
+                {
+                    idleParamHash = Animator.StringToHash(idleBoolParameterName);
+                    hasIdleParam = true;
+                    break;
+                }
+            }
         }
 
         currentState = State.Patrolling;
@@ -121,22 +138,31 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         {
             float moveVal = agent.velocity.magnitude;
 
-            // If animator.speed is approximately zero, force movement param to 0 so walk animation doesn't play
+            // If animator.speed is approximately zero, switch to Idle (if available) and set movement to 0 so walk doesn't play
             if (Mathf.Abs(animator.speed) <= 0.001f)
             {
                 if (moveSpeedParamHash != -1)
                     animator.SetFloat(moveSpeedParamHash, 0f);
                 else
                     animator.SetFloat(moveSpeedParameterName, 0f);
+
+                if (hasIdleParam)
+                    animator.SetBool(idleParamHash, true);
             }
             else
             {
-                // If movement is very small, set to exact zero to avoid jitter
+                // If movement is very small, treat as idle to avoid jitter
                 float outVal = moveVal < moveSpeedZeroThreshold ? 0f : moveVal;
                 if (moveSpeedParamHash != -1)
                     animator.SetFloat(moveSpeedParamHash, outVal);
                 else
                     animator.SetFloat(moveSpeedParameterName, outVal);
+
+                // when computed movement is zero, switch to Idle; otherwise ensure Idle is false
+                if (hasIdleParam)
+                {
+                    animator.SetBool(idleParamHash, outVal == 0f);
+                }
             }
         }
     }
@@ -226,6 +252,9 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
             animator.speed = computedAnimatorSpeed;
             animatorSpeedOverridden = true;
         }
+
+        // Debug output to help verify values at runtime
+        Debug.Log($"[NavMeshPatrol] StartAttacking: computedAnimatorSpeed={computedAnimatorSpeed:F3}, computedProjectileDelay={computedProjectileDelay:F3}");
     }
 
     void StartSearching()
@@ -264,6 +293,12 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         {
             animator.speed = 1f;
             animatorSpeedOverridden = false;
+        }
+
+        // Ensure Idle flag reset when restoring speed
+        if (animator != null && hasIdleParam)
+        {
+            animator.SetBool(idleParamHash, false);
         }
     }
 
@@ -324,7 +359,7 @@ public class NavMeshPatrol_WithAnimation : MonoBehaviour
         // Trigger attack animation
         if (animator != null)
         {
-            animator.SetTrigger("Attack");
+            animator.SetTrigger(attackTriggerHash);
         }
 
         if (combatType == CombatType.Melee)
