@@ -1259,6 +1259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   levelEnded: 0
+  maxMinion: 0
 --- !u!4 &150242486
 Transform:
   m_ObjectHideFlags: 0

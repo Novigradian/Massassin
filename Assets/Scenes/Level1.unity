@@ -1101,6 +1101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   levelEnded: 0
+  maxMinion: 0
 --- !u!4 &299797628
 Transform:
   m_ObjectHideFlags: 0
@@ -2562,6 +2563,10 @@ PrefabInstance:
     - target: {fileID: 6019757745235613999, guid: ce7903b6b87c60e4a90da83fa221fc30, type: 3}
       propertyPath: m_Name
       value: MainCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7979776128641986134, guid: ce7903b6b87c60e4a90da83fa221fc30, type: 3}
+      propertyPath: isTesting
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5791,22 +5796,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4484157000626698036, guid: 05a92747ea758c749bdb8c7c2401645b, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9b6c7782d0f89d048be8a5dcd0afb311, type: 2}
-    - target: {fileID: 4770879883221020789, guid: 05a92747ea758c749bdb8c7c2401645b, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9b6c7782d0f89d048be8a5dcd0afb311, type: 2}
-    - target: {fileID: 7981097869966881908, guid: 05a92747ea758c749bdb8c7c2401645b, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 447094d1483034342888d9cfff081b69, type: 2}
-    - target: {fileID: 9151711836217915183, guid: 05a92747ea758c749bdb8c7c2401645b, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9b6c7782d0f89d048be8a5dcd0afb311, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
